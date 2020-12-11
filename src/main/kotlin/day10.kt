@@ -6,6 +6,10 @@ fun main() {
         numbers.add(line.toInt())
     }
 
+    numbers.sort()
+    numbers.add(0, 0)
+    numbers.add(numbers.size, numbers.last() + 3)
+
     val firstResult = first(ArrayList(numbers))
     println(firstResult)
 
@@ -14,9 +18,6 @@ fun main() {
 }
 
 private fun second(numbers: java.util.ArrayList<Long>): Long {
-    numbers.sort()
-    numbers.add(0, 0)
-    numbers.add(numbers.size, numbers.last() + 3)
 
     val adj = numbers.mapIndexed { index, value ->
         fun dive(i: Int, acc: IntArray): IntArray {
@@ -27,7 +28,6 @@ private fun second(numbers: java.util.ArrayList<Long>): Long {
 
         dive(index + 1, IntArray(0))
     }
-
 
     val memo = LongArray(numbers.size)
     fun dfs(u: Int, t: Int) : Long {
@@ -44,10 +44,6 @@ private fun second(numbers: java.util.ArrayList<Long>): Long {
 }
 
 private fun first(numbers: java.util.ArrayList<Int>): Int {
-    numbers.sort()
-    numbers.add(0, 0)
-    numbers.add(numbers.size, numbers.maxOrNull()!! + 3)
-
     var oneJolt = 0
     var threeJolt = 0
 
