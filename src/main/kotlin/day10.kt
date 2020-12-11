@@ -18,7 +18,6 @@ fun main() {
 }
 
 private fun second(numbers: java.util.ArrayList<Long>): Long {
-
     val adj = numbers.mapIndexed { index, value ->
         fun dive(i: Int, acc: IntArray): IntArray {
             if (i == numbers.size) return acc
@@ -30,26 +29,31 @@ private fun second(numbers: java.util.ArrayList<Long>): Long {
     }
 
     val memo = LongArray(numbers.size)
-    fun dfs(u: Int, t: Int) : Long {
+    fun dfs(u: Int, t: Int): Long {
         if (u == t) return 1
         if (memo[u] == 0L) {
-            adj[u].forEach {neighbor ->
+            adj[u].forEach { neighbor ->
                 memo[u] += dfs(neighbor, t)
             }
         }
         return memo[u]
     }
 
-    return dfs(0, numbers.size-1)
+    return dfs(0, numbers.size - 1)
 }
 
+private class JoltFinder(val threes: Int, val ones: Int, val prev: Int)
 private fun first(numbers: java.util.ArrayList<Int>): Int {
-    var oneJolt = 0
-    var threeJolt = 0
+    val first = numbers.first()
 
-    for (i in 1 until numbers.size) {
-        if (numbers[i] - 3 == numbers[i - 1]) threeJolt++
-        if (numbers[i] - 1 == numbers[i - 1]) oneJolt++
-    }
-    return oneJolt * threeJolt
+    val res: JoltFinder = numbers
+            .takeLast(numbers.size - 1)
+            .fold(JoltFinder(0, 0, first)) { acc, value ->
+                when (acc.prev) {
+                    value - 3 -> JoltFinder(acc.threes + 1, acc.ones, value)
+                    value - 1 -> JoltFinder(acc.threes, acc.ones + 1, value)
+                    else -> JoltFinder(acc.threes, acc.ones, value)
+                }
+            }
+    return res.threes * res.ones
 }
